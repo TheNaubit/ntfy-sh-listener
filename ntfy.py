@@ -12,6 +12,11 @@ ntfy_topic = os.environ["NTFY_TOPIC"]
 telegram_bot = os.environ["TELEGRAM_BOT"]
 chat_id = os.environ["TELEGRAM_ID"]
 
+def escape_markdown_v2(text):
+    """Escapes characters for MarkdownV2."""
+    escape_chars = '_*[]()~`>#+-=|{}.!'
+    return ''.join(['\\' + char if char in escape_chars else char for char in text])
+
 def on_message(ws, message):
     msg = json.loads(message)
     if not msg.get('title', '').strip() and not msg.get('message', '').strip():
@@ -20,14 +25,18 @@ def on_message(ws, message):
         # Only add the title and \n\n if there is a non-empty title key
         text_content = ''
         if msg.get('title', '').strip():
-            text_content += '*' + msg['title'].strip() + '*\n\n'
-        text_content += msg.get('message', '').strip()  # Add the message, if any
+            escaped_title = escape_markdown_v2(msg['title'].strip())
+            text_content += '**' + escaped_title + '**\n\n' # Add the escaped title, if any
+
+        if msg.get('message', '').strip():
+            escaped_message = escape_markdown_v2(msg['message'].strip())
+            text_content += escaped_message  # Add the escaped message, if any
         
         headers = {"content-type": "application/x-www-form-urlencoded"}
         querystring = {
             "chat_id": chat_id,
             "text": text_content,
-            "parse_mode": "MarkdownV2"  # Enable Markdown formatting
+            "parse_mode": "MarkdownV2"  # Enable Markdown v2 formatting
         }
         response = requests.request(
                 "POST", telegram_bot, headers=headers, params=querystring)
