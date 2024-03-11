@@ -30,6 +30,7 @@ touch .env
 
 ```sh
 NTFY_WS = "ntfy.sh/"
+NTFY_ACCESS_CONTROL = "<ACCESS TOKEN>" # This field is optional, only there in case you need to use some authentication. You will need to generate an access token as explained here: https://docs.ntfy.sh/publish/#access-tokens
 NTFY_TOPIC ="<YOUR TOPIC>"
 TELEGRAM_BOT = "https://api.telegram.org/bot<YOUR BOT API TOKEN>/sendMessage"
 TELEGRAM_ID = "<CHAT ID>"
@@ -54,6 +55,7 @@ RUN pip install --upgrade pip
 RUN pip3 install requests python-dotenv websocket-client
 ENV NTFY_WS = "ntfy.sh/"
 ENV NTFY_TOPIC ="<YOUR TOPIC>"
+ENV NTFY_ACCESS_CONTROL = "<ACCESS TOKEN>"
 ENV TELEGRAM_BOT = "https://api.telegram.org/bot<YOUR BOT API TOKEN>/sendMessage"
 ENV TELEGRAM_ID = "<CHAT ID>"
 COPY ntfy.py /usr/bin
