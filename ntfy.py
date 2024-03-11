@@ -35,7 +35,7 @@ def on_open(ws):
 if __name__ == "__main__":
     headers = []
     if ntfy_access_control:  # Add the header only if ntfy_access_control is defined and not empty
-        headers.append("Authorization: Basic " + str(ntfy_access_control))
+        headers.append("Authorization: Bearer " + str(ntfy_access_control))
 
     wsapp = websocket.WebSocketApp("wss://" + str(ntfy_ws) + ntfy_topic + "/ws",
                                    on_open=on_open,
