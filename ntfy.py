@@ -20,14 +20,14 @@ def on_message(ws, message):
         # Only add the title and \n\n if there is a non-empty title key
         text_content = ''
         if msg.get('title', '').strip():
-            text_content += '**' + msg['title'].strip() + '**\n\n'
+            text_content += '*' + msg['title'].strip() + '*\n\n'
         text_content += msg.get('message', '').strip()  # Add the message, if any
         
         headers = {"content-type": "application/x-www-form-urlencoded"}
         querystring = {
             "chat_id": chat_id,
             "text": text_content,
-            "parse_mode": "Markdown"  # Enable Markdown formatting
+            "parse_mode": "MarkdownV2"  # Enable Markdown formatting
         }
         response = requests.request(
                 "POST", telegram_bot, headers=headers, params=querystring)
