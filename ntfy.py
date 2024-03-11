@@ -14,11 +14,21 @@ chat_id = os.environ["TELEGRAM_ID"]
 
 def on_message(ws, message):
     msg = json.loads(message)
-    if not 'title' in msg or len(msg['title']) == 0:
+    if not msg.get('title', '').strip() and not msg.get('message', '').strip():
        print('\n >>> Ntfy.sh websocket Successfully Passing...! \n')
     else:
+        # Only add the title and \n\n if there is a non-empty title key
+        text_content = ''
+        if msg.get('title', '').strip():
+            text_content += '**' + msg['title'].strip() + '**\n\n'
+        text_content += msg.get('message', '').strip()  # Add the message, if any
+        
         headers = {"content-type": "application/x-www-form-urlencoded"}
-        querystring = {"chat_id": chat_id, "text": msg['title'] + "\n\n" +  msg['message']}
+        querystring = {
+            "chat_id": chat_id,
+            "text": text_content,
+            "parse_mode": "Markdown"  # Enable Markdown formatting
+        }
         response = requests.request(
                 "POST", telegram_bot, headers=headers, params=querystring)
         print("websocket: " + message + "Ntfy: " + response.text)
